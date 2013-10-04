@@ -27,7 +27,7 @@ public class DistanceCalculaterFactory
 
     public static interface DistanceCalculater
     {
-	public abstract double calculate(Model m1, Model m2);
+	public double calculate(Model m1, Model m2);
     }
 
     public static class D2DistanceCalculater implements DistanceCalculater
