@@ -45,11 +45,19 @@ public class BMI
 	frame.displayData(data3);
 
 	// Blatt 2 - Aufgabe 2
-	double d = bmi.kNN(1, DistanceType.D2);
-	System.out.println(d);
-	d = bmi.kNN(31, DistanceType.DInfinit);
-	System.out.println(d);
+	int[] k = { 1, 3, 5, 9, 15, 31 };
 
+	for (int i = 0; i < k.length; i++)
+	{
+	    System.out.println("K = " + k[i]);
+	    double d = bmi.kNN(k[i], DistanceType.D1);
+	    System.out.println("d1: " + d);
+	    d = bmi.kNN(k[i], DistanceType.D2);
+	    System.out.println("d2: " + d);
+	    d = bmi.kNN(k[i], DistanceType.DInfinit);
+	    System.out.println("dinf: " + d);
+	    System.out.println();
+	}
     }
 
     public double kNN(int k, DistanceType d)
@@ -58,19 +66,29 @@ public class BMI
 	int successes = 0;
 	List<Pair> pairs = null;
 	DistanceCalculater calc = DistanceCalculaterFactory.create(d);
-	for (int i = 101; i < list.size(); i++)
+	for (int i = 100; i < list.size(); i++)
 	{
 	    Model m = list.get(i);
 	    pairs = calcNeighbor(m, k, calc);
-	    int index = k % 2 == 0 ? k / 2 : k / 2 + 1;
-	    if (m.getKlassifikation() == pairs.get(index).getRight()
-		    .getKlassifikation())
-		successes++;
-	    else
-		errors++;
+	    int class0 = 0;
+	    int class1 = 0;
+	    for (Pair p : pairs)
+	    {
+		if (p.getRight().getKlassifikation() == 0)
+		    class0++;
+		else
+		    class1++;
+	    }
+	    if (class0 > class1)
+	    {
+		if (m.getKlassifikation() == 0)
+		    successes++;
+		else
+		    errors++;
+	    }
 	}
 
-	return (successes+errors)/100.0*errors;
+	return 100 / (successes + errors) * errors;
     }
 
     public List<Pair> calcNeighbor(Model data, int k,
