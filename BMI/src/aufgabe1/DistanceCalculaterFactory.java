@@ -58,9 +58,9 @@ public class DistanceCalculaterFactory
 	@Override
 	public double calculate(Model m1, Model m2)
 	{
-	    double temp1 = Math.pow(m2.getGroesse()-m1.getGroesse(), 3);
-	    double temp2 = Math.pow(m2.getGewicht()-m1.getGewicht(), 3);
-	    return Math.pow(temp1+temp2, 1.0/3);
+	    double temp1 = Math.abs(m2.getGroesse()-m1.getGroesse());
+	    double temp2 = Math.abs(m2.getGewicht()-m1.getGewicht());
+	    return Math.max(temp1, temp2);
 	}
     }
 }

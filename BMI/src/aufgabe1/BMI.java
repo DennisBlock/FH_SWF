@@ -47,6 +47,9 @@ public class BMI
 	// Blatt 2 - Aufgabe 2
 	int[] k = { 1, 3, 5, 9, 15, 31 };
 
+
+//	    double d = bmi.kNN(1, DistanceType.DInfinit);
+//	    System.out.println("dinf: " + d);
 	for (int i = 0; i < k.length; i++)
 	{
 	    System.out.println("K = " + k[i]);
@@ -86,8 +89,16 @@ public class BMI
 		else
 		    errors++;
 	    }
+	    else
+	    {
+		if (m.getKlassifikation() == 1)
+		    successes++;
+		else
+		    errors++;
+	    }
 	}
-
+//	System.out.println("Max: " + (successes + errors));
+//	System.out.println("Errors: " + errors);
 	return 100 / (successes + errors) * errors;
     }
 
@@ -105,7 +116,7 @@ public class BMI
 
 	Collections.sort(m);
 
-	return m.subList(0, k + 1);
+	return m.subList(0, k);
     }
 
     public void generate()
