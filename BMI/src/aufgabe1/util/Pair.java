@@ -42,11 +42,10 @@ public class Pair implements Comparable<Pair>
     {
 	return left.compareTo(o.getLeft());
     }
-    
+
     @Override
     public String toString()
     {
-        return String.valueOf(left.doubleValue());
+	return "Pair [left=" + left + ", right=" + right + "]";
     }
-
 }

@@ -2,52 +2,86 @@ package aufgabe1;
 
 public class Model
 {
-   private double groesse;
-   private double gewicht;
-   private int klassifikation;
-   
-   public Model(double groesse2, double gewicht2, int klassifikation)
-   {
-      this.groesse = groesse2;
-      this.gewicht = gewicht2;
-      this.klassifikation = klassifikation;
-   }
+    private double groesse;
+    private double gewicht;
+    private int klassifikation;
 
-   public int getKlassifikation()
-   {
-      return klassifikation;
-   }
-
-   public void setKlassifikation(int klassifikation)
-   {
-      this.klassifikation = klassifikation;
-   }
-
-   public double getGroesse()
-   {
-      return groesse;
-   }
-
-   public void setGroesse(double groesse)
-   {
-      this.groesse = groesse;
-   }
-
-   public double getGewicht()
-   {
-      return gewicht;
-   }
-
-   public void setGewicht(double gewicht)
-   {
-      this.gewicht = gewicht;
-   }
-
-   @Override
-   public String toString()
-   {
-      return groesse + " " + gewicht + " " + klassifikation;
-   }
+    private double normalizedGroesse;
+    private double normalizedGewicht;
     
-   
+    private int random;
+
+    private boolean isNormalized = false;
+    
+    public Model(double groesse, double gewicht, int klassifikation, int random)
+    {
+	this(groesse, gewicht, klassifikation);
+	this.random = random;
+    }
+
+    public Model(double groesse, double gewicht, int klassifikation)
+    {
+	this.groesse = groesse;
+	this.gewicht = gewicht;
+	this.klassifikation = klassifikation;
+    }
+
+    public int getKlassifikation()
+    {
+	return klassifikation;
+    }
+
+    public double getGroesse()
+    {
+	if (isNormalized)
+	    return normalizedGroesse;
+
+	return groesse;
+    }
+
+    public void setGroesse(double groesse)
+    {
+	this.groesse = groesse;
+    }
+
+    public double getGewicht()
+    {
+	if (isNormalized)
+	    return normalizedGewicht;
+
+	return gewicht;
+    }
+
+    public void setGewicht(double gewicht)
+    {
+	this.gewicht = gewicht;
+    }
+    
+    public int getRandom()
+    {
+	return random;
+    }
+
+    public void normalize(double averageHeight, double averageWeight,
+	    double standartHeight, double standartWeight)
+    {
+	normalizedGroesse = (groesse - averageHeight) / standartHeight;
+	normalizedGewicht = (gewicht - averageWeight) / standartWeight;
+
+	isNormalized = true;
+    }
+
+    public void unnormalize()
+    {
+	isNormalized = false;
+    }
+
+    @Override
+    public String toString()
+    {
+	return "Model [isNormalized=" + isNormalized + ", getKlassifikation()="
+		+ getKlassifikation() + ", getGroesse()=" + getGroesse()
+		+ ", getGewicht()=" + getGewicht() + "]";
+    }
+
 }
