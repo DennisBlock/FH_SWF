@@ -1,0 +1,1 @@
+toptail([_|Ti], O):- append(O, [_] ,Ti).
