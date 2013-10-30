@@ -1,0 +1,1 @@
+%groundterm(Term):- 
