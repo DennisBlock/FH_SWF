@@ -19,8 +19,6 @@ public class Cluster
 	points = new ArrayList<Point>();
 	points.add(p);
 	
-//	center = p;
-	
 	identifier = id++;
     }
     
