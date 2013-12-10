@@ -21,7 +21,7 @@ public class BMI
     private static final boolean GENERATE_STANDARD = false;
     private static final boolean GENERATE_WITH_RANDOM = true;
 
-    private ArrayList<Model> list;
+    private ArrayList<Person> list;
 
     private double averageWeight = 0.0;
     private double averageHeight = 0.0;
@@ -37,11 +37,11 @@ public class BMI
 	DataTable data1 = bmi.toDataTable(101, 199);
 
 	LinePlotTest frame = new LinePlotTest(data0, data1);
-	// frame.setVisible(true);
+	 frame.setVisible(true);
 
 	// Blatt 2 - Aufgabe 1
-	Model paul = new Model(175, 89, -1);
-	Model neigbor = bmi
+	Person paul = new Person(175, 89, -1);
+	Person neigbor = bmi
 		.calcNeighbor(paul, 1,
 			DistanceCalculaterFactory.create(DistanceType.D2))
 		.get(0).getRight();
@@ -110,7 +110,7 @@ public class BMI
 	    case 0:
 		for(int i = 0; i < 100; i++)
 		{
-		    Model m = list.get(i);
+		    Person m = list.get(i);
 		    if(m.getKlassifikation() == 0)
 		    {
 			averageHeight += m.getGroesse();
@@ -122,7 +122,7 @@ public class BMI
 	    case 1:
 		for(int i = 0; i < 100; i++)
 		{
-		    Model m = list.get(i);
+		    Person m = list.get(i);
 		    if(m.getKlassifikation() == 1)
 		    {
 			averageHeight += m.getGroesse();
@@ -157,7 +157,7 @@ public class BMI
 
 	for (int i = 0; i < 200; i++)
 	{
-	    Model m = list.get(i);
+	    Person m = list.get(i);
 	    m.setGewicht(m.getGewicht() - averageWeight);
 	    m.setGroesse(m.getGroesse() - averageHeight);
 	}
@@ -181,7 +181,7 @@ public class BMI
 
 	for (int i = 0; i < 200; i++)
 	{
-	    Model m = list.get(i);
+	    Person m = list.get(i);
 	    m.setGewicht(m.getGewicht() / standartDeviationWeight);
 	    m.setGroesse(m.getGroesse() / standartDeviationHeight);
 	}
@@ -246,7 +246,7 @@ public class BMI
 	DistanceCalculater calc = DistanceCalculaterFactory.create(d);
 	for (int i = 100; i < list.size(); i++)
 	{
-	    Model m = list.get(i);
+	    Person m = list.get(i);
 	    pairs = calcNeighbor(m, k, calc);
 	    int class0 = 0;
 	    int class1 = 0;
@@ -275,13 +275,13 @@ public class BMI
 	return 100 / (successes + errors) * errors;
     }
 
-    public List<Pair> calcNeighbor(Model data, int k,
+    public List<Pair> calcNeighbor(Person data, int k,
 	    DistanceCalculater distance)
     {
 	List<Pair> m = new ArrayList<Pair>();
 	for (int i = 0; i < 100; i++)
 	{
-	    Model temp = list.get(i);
+	    Person temp = list.get(i);
 	    double d2 = distance.calculate(temp, data);
 	    m.add(new Pair(d2, temp));
 	}
@@ -293,7 +293,7 @@ public class BMI
 
     public void generate(boolean inMeter, boolean random)
     {
-	list = new ArrayList<Model>();
+	list = new ArrayList<Person>();
 
 	for (int i = 0; i < 200; i++)
 	{
@@ -309,16 +309,16 @@ public class BMI
 	    if (inMeter)
 		groesse /= 100;
 	    
-	    Model model = null;
+	    Person model = null;
 	    
 	    if(random)
 	    {
 		Random rand = new Random();
 		int r = rand.nextInt() % 10000;
-		model = new Model(groesse, gewicht, klassifikation, r);
+		model = new Person(groesse, gewicht, klassifikation, r);
 	    }
 	    else
-		model = new Model(groesse, gewicht, klassifikation);
+		model = new Person(groesse, gewicht, klassifikation);
 	    
 	    list.add(model);
 	}
@@ -332,7 +332,7 @@ public class BMI
 	DataTable data = new DataTable(Double.class, Double.class);
 	for (int i = start; i <= end; i++)
 	{
-	    Model m = list.get(i);
+	    Person m = list.get(i);
 	    data.add(m.getGroesse(), m.getGewicht());
 	}
 	return data;
