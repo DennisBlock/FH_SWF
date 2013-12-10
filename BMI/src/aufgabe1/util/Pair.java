@@ -1,14 +1,14 @@
 package aufgabe1.util;
 
-import aufgabe1.Model;
+import aufgabe1.Person;
 
 public class Pair implements Comparable<Pair>
 {
 
     private final Double left;
-    private final Model right;
+    private final Person right;
 
-    public Pair(Double left, Model right)
+    public Pair(Double left, Person right)
     {
 	this.left = left;
 	this.right = right;
@@ -19,7 +19,7 @@ public class Pair implements Comparable<Pair>
 	return left;
     }
 
-    public Model getRight()
+    public Person getRight()
     {
 	return right;
     }

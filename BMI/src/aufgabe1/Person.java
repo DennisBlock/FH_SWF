@@ -1,6 +1,6 @@
 package aufgabe1;
 
-public class Model
+public class Person
 {
     private double groesse;
     private double gewicht;
@@ -13,13 +13,13 @@ public class Model
 
     private boolean isNormalized = false;
     
-    public Model(double groesse, double gewicht, int klassifikation, int random)
+    public Person(double groesse, double gewicht, int klassifikation, int random)
     {
 	this(groesse, gewicht, klassifikation);
 	this.random = random;
     }
 
-    public Model(double groesse, double gewicht, int klassifikation)
+    public Person(double groesse, double gewicht, int klassifikation)
     {
 	this.groesse = groesse;
 	this.gewicht = gewicht;

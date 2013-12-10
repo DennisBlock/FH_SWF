@@ -1,77 +1,81 @@
 package de.fhswf.cluster;
+
 import java.util.ArrayList;
-import java.util.List;
-
-import de.erichseifert.gral.data.DataTable;
-
 
 public class Cluster
 {
+    static int id = 0;
 
-    enum DataSet
+    private ArrayList<Point> points;
+    private int identifier;
+    private Point center;
+
+    /**
+     * Cluster hat zu Beginn immer nur einen Point.
+     * @param p
+     */
+    public Cluster(Point p)
     {
-	Number1, Number2
-    }
-
-    List<Point> list = new ArrayList<Point>();
-
-    public static void main(String[] args)
-    {
-	Cluster cluster = new Cluster();
-	cluster.generate(DataSet.Number1);
-	cluster.display();
-	cluster.reset();
-	cluster.generate(DataSet.Number2);
-	cluster.display();
-    }
-    
-    public void generate(DataSet set)
-    {
-	switch (set)
-	{
-	    case Number1:
-		for (int i = 1; i <= 20; i++)
-		{
-		    double x = 1 + 5 * (i % 2) + ((i - 1) / 4);
-		    double y = 1 + 5 * (i % 2) + (i % 5);
-
-		    Point point = new Point(x, y);
-		    list.add(point);
-		    System.out.println(point);
-		}
-		break;
-	    case Number2:
-		for (int i = 1; i <= 20; i++)
-		{
-		    double x = 5 + (i % 2) * ((i / 2) - 4) * (0.3 + 1 / i);
-		    double y = 5 + (1 - (i % 2)) * ((i / 2) - 4)
-			    * (0.3 + 1.0 / (i + 1));
-
-		    Point point = new Point(x, y);
-		    list.add(point);
-		    System.out.println(point);
-		}
-		break;
-	    default:
-		throw new RuntimeException("invalid argument: " + set);
-	}
+	points = new ArrayList<Point>();
+	points.add(p);
+	
+	identifier = id++;
     }
     
-    public void display()
+    public void add(Point p)
     {
-	@SuppressWarnings("unchecked")
-	DataTable data = new DataTable(Double.class, Double.class);
-	for(Point p : list)
+	points.add(p);
+	recalculateCenter();
+    }
+    
+    public int size()
+    {
+	return points.size();
+    }
+    
+    public Point getPointAt(int index)
+    {
+	return points.get(index);
+    }
+    
+    private void recalculateCenter()
+    {
+	double x = 0.0;
+	double y = 0.0;
+	
+	for(Point p : points)
 	{
-	    data.add(p.getX(), p.getY());
+	    x += p.getX();
+	    y += p.getY();
 	}
 	
-	LinePlotTest frame = new LinePlotTest(data);
-	 frame.setVisible(true);
+	x = x / points.size();
+	y = y / points.size();
+	center = new Point(x, y);
+    }
+    
+    public Point getCenter()
+    {
+	return center;
+    }
+    
+    public void center()
+    {
+	center = points.get(0);
+    }
+    
+    public void merge(Cluster cluster)
+    {
+	points.addAll(cluster.points);
+	System.out.println("merged cluster " + identifier + " with cluster " + cluster.identifier);
     }
 
-    public void reset()
+    @Override
+    public String toString()
     {
-        list.clear();
+	return "Cluster [center=" + center + ", identifier=" + identifier
+		+ ", points=" + points + "]";
     }
+    
+    
 }

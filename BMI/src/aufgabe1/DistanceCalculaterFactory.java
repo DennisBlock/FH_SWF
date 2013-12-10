@@ -40,13 +40,13 @@ public class DistanceCalculaterFactory
 
     public static interface DistanceCalculater
     {
-	public double calculate(Model m1, Model m2);
+	public double calculate(Person m1, Person m2);
     }
 
     public static class D1DistanceCalculater implements DistanceCalculater
     {
 	@Override
-	public double calculate(Model m1, Model m2)
+	public double calculate(Person m1, Person m2)
 	{
 	    return Math.abs(m2.getGroesse() - m1.getGroesse())
 		    + Math.abs(m2.getGewicht() - m1.getGewicht());
@@ -57,7 +57,7 @@ public class DistanceCalculaterFactory
     {
 
 	@Override
-	public double calculate(Model m1, Model m2)
+	public double calculate(Person m1, Person m2)
 	{
 	    return Math
 		    .sqrt(((m2.getGewicht() - m1.getGewicht()) * (m2
@@ -70,7 +70,7 @@ public class DistanceCalculaterFactory
     public static class DInfDistanceCalculater implements DistanceCalculater
     {
 	@Override
-	public double calculate(Model m1, Model m2)
+	public double calculate(Person m1, Person m2)
 	{
 	    double temp1 = Math.abs(m2.getGroesse() - m1.getGroesse());
 	    double temp2 = Math.abs(m2.getGewicht() - m1.getGewicht());
@@ -81,7 +81,7 @@ public class DistanceCalculaterFactory
     public static class D1A5DistanceCalculater implements DistanceCalculater
     {
 	@Override
-	public double calculate(Model m1, Model m2)
+	public double calculate(Person m1, Person m2)
 	{
 	    return Math.abs(m2.getGewicht() - m1.getGewicht());
 	}
@@ -91,7 +91,7 @@ public class DistanceCalculaterFactory
     {
 
 	@Override
-	public double calculate(Model m1, Model m2)
+	public double calculate(Person m1, Person m2)
 	{
 	    return Math.sqrt(((m2.getGewicht() - m1.getGewicht()) * (m2
 		    .getGewicht() - m1.getGewicht())));
@@ -101,7 +101,7 @@ public class DistanceCalculaterFactory
     public static class DInfA5DistanceCalculater implements DistanceCalculater
     {
 	@Override
-	public double calculate(Model m1, Model m2)
+	public double calculate(Person m1, Person m2)
 	{
 	    double temp2 = Math.abs(m2.getGewicht() - m1.getGewicht());
 	    return temp2;
@@ -111,7 +111,7 @@ public class DistanceCalculaterFactory
     public static class D1A6DistanceCalculater implements DistanceCalculater
     {
 	@Override
-	public double calculate(Model m1, Model m2)
+	public double calculate(Person m1, Person m2)
 	{
 	    return Math.abs(m2.getGroesse() - m1.getGroesse())
 		    + Math.abs(m2.getGewicht() - m1.getGewicht())
@@ -123,7 +123,7 @@ public class DistanceCalculaterFactory
     {
 
 	@Override
-	public double calculate(Model m1, Model m2)
+	public double calculate(Person m1, Person m2)
 	{
 	    return Math
 		    .sqrt(((m2.getGewicht() - m1.getGewicht()) * (m2
@@ -138,7 +138,7 @@ public class DistanceCalculaterFactory
     public static class DInfA6DistanceCalculater implements DistanceCalculater
     {
 	@Override
-	public double calculate(Model m1, Model m2)
+	public double calculate(Person m1, Person m2)
 	{
 	    double temp1 = Math.abs(m2.getGroesse() - m1.getGroesse());
 	    double temp2 = Math.abs(m2.getGewicht() - m1.getGewicht());
