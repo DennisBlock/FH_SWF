@@ -14,14 +14,12 @@ public class DiamondSquare {
 	public DiamondSquare(int size, double h) {
 		if (!isPowerOfTwo(size - 1))
 			throw new IllegalArgumentException("Die Groesse muss 2^n+1 sein.");
-		// Check für zu hohe groesse -> zu wenig memory(?)
-		// if()
 
 		map = new double[size][size];
 		this.size = size;
 		this.h = h;
 
-		random = new Random();
+		random = new Random(98945613323468587L);
 		normalizer = new Normalizer(1.0, -1.0, 1.0, 0.0);
 	}
 
@@ -57,32 +55,17 @@ public class DiamondSquare {
 
 	public void generateHeightmap() {
 
-		// side length is distance of a single square side
-		// or distance of diagonal in diamond
-		// seed the data
 		map[0][0] = random.nextDouble();
 		map[0][size - 1] = random.nextDouble();
 		map[size - 1][0] = random.nextDouble();
 		map[size - 1][size - 1] = random.nextDouble();
-		
-		for (int sideLength = size - 1;
-		// side length must be >= 2 so we always have
-		// a new value (if its 1 we overwrite existing values
-		// on the last iteration)
-		sideLength >= 2;
-		// each iteration we are looking at smaller squares
-		// diamonds, and we decrease the variation of the offset
-		sideLength /= 2, h /= 2.0) {
-			// half the length of the side of a square
-			// or distance from diamond center to one corner
-			// (just to make calcs below a little clearer)
+
+		for (int sideLength = size - 1; sideLength >= 2; sideLength /= 2, h /= 2.0) {
 			int halfSide = sideLength / 2;
 
 			// generate the new square values
 			for (int x = 0; x < size - 1; x += sideLength) {
 				for (int y = 0; y < size - 1; y += sideLength) {
-					// x, y is upper left corner of square
-					// calculate average of existing corners
 					double avg = map[x][y] + // top left
 							map[x + sideLength][y] + // top right
 							map[x][y + sideLength] + // lower left
@@ -90,49 +73,23 @@ public class DiamondSquare {
 					avg /= 4.0;
 
 					double temp = (avg + (random.nextDouble() * 2 * h) - h);
-					// center is average plus random offset
-					map[x + halfSide][y + halfSide] =
-					// We calculate random value in range of 2h
-					// and then subtract h so the end value is
-					// in the range (-h, +h)
-					temp > 1 ? 1 : temp;
+					map[x + halfSide][y + halfSide] = temp > 1 ? 1 : temp;
 				}
 			}
 
 			// generate the diamond values
-			// since the diamonds are staggered we only move x
-			// by half side
-			// NOTE: if the data shouldn't wrap then x < size
-			// to generate the far edge values
 			for (int x = 0; x < size - 1; x += halfSide) {
-				// and y is x offset by half a side, but moved by
-				// the full side length
-				// NOTE: if the data shouldn't wrap then y < DATA_SIZE
-				// to generate the far edge values
 				for (int y = (x + halfSide) % sideLength; y < size - 1; y += sideLength) {
-					// x, y is center of diamond
-					// note we must use mod and add DATA_SIZE for subtraction
-					// so that we can wrap around the array to find the corners
 					double avg = map[(x - halfSide + size) % size][y] + // left
-																		// of
-																		// center
 							map[(x + halfSide) % size][y] + // right of center
 							map[x][(y + halfSide) % size] + // below center
 							map[x][(y - halfSide + size) % size]; // above
-																	// center
 					avg /= 4.0;
 
-					// new value = average plus random offset
-					// We calculate random value in range of 2h
-					// and then subtract h so the end value is
-					// in the range (-h, +h)
 					avg = avg + (random.nextDouble() * 2 * h) - h;
 					// update value for center of diamond
 					map[x][y] = avg;
 
-					// wrap values on the edges, remove
-					// this and adjust loop condition above
-					// for non-wrapping values.
 					if (x == 0)
 						map[size - 1][y] = avg;
 					if (y == 0)
@@ -140,9 +97,15 @@ public class DiamondSquare {
 				}
 			}
 		}
+		for (int i = 0; i < map.length; i++) {
+			for (int j = 0; j < map.length; j++) {
+				map[i][j] = (float) (map[i][j] <= 0 ? -Math.sqrt(Math
+						.abs(map[i][j])) : map[i][j]);
+			}
+		}
 	}
 
-	public int getSize() {
+	public int size() {
 		return size;
 	}
 
@@ -158,7 +121,8 @@ public class DiamondSquare {
 		this.h = h;
 	}
 
-	public double[][] getHeightmap() {
-		return map;
+	public double get(int x, int y) {
+		return map[x][y];
 	}
+
 }
