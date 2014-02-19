@@ -1,5 +1,6 @@
 package de.fhswf.terrain.generator;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
@@ -20,44 +21,95 @@ import javax.imageio.ImageIO;
 
 public class TerrainGenerator extends Application {
 
-	
-	public static final int MAP_SIZE = 1025;
+	public static final int MAP_SIZE = 513;
 
 	private DiamondSquare diamond;
-	
+
 	private Image image;
 
 	public TerrainGenerator() {
-		diamond = new DiamondSquare(MAP_SIZE, 1.0);
+		diamond = new DiamondSquare(MAP_SIZE, 3.0);
 
 		createHeightmapImage();
 		try {
 			image = createTerrain();
+			image = blur(image);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
+	private Image blur(Image src) {
+        PixelReader reader = src.getPixelReader();
+		WritableImage dest = new WritableImage(MAP_SIZE, MAP_SIZE);
+        PixelWriter writer = dest.getPixelWriter();
+
+        for (int x = 0; x < src.getWidth(); x++) {
+            for (int y = 0; y < src.getHeight(); y++) {
+                double red = 0;
+                double green = 0;
+                double blue = 0;
+                double alpha = 0;
+                int count = 0;
+
+                int kernelSize = 1;
+				// reading neighbor pixels
+                for (int i = -kernelSize ; i <= kernelSize; i++) {
+                    for (int j = -kernelSize; j <= kernelSize; j++) {
+                        if (x + i < 0 || x + i >= src.getWidth() 
+                           || y + j < 0 || y + j >= src.getHeight()) {
+                            continue;
+                        }
+                        Color color = reader.getColor(x + i, y + j);
+                        red += color.getRed();
+                        green += color.getGreen();
+                        blue += color.getBlue();
+                        alpha += color.getOpacity();
+                        count++;
+                    }
+                }
+                Color blurColor = Color.color(red / count, 
+                                              green / count, 
+                                              blue / count, 
+                                              alpha / count);
+                writer.setColor(x, y, blurColor);
+            }
+        }
+        return dest;
+    }
+
 	private void createHeightmapImage() {
 		diamond.generateHeightmap();
 		diamond.normalize();
-		double[][] map = diamond.getHeightmap();
 
 		WritableImage image = new WritableImage(MAP_SIZE, MAP_SIZE);
 		PixelWriter writer = image.getPixelWriter();
 
-		for (int x = 0; x < map.length; ++x) {
-			for (int y = 0; y < map.length; ++y) {
-				double temp = map[x][y];
-				if (temp > 1)
-					temp = 1;
-				if (temp < 0)
-					temp = 0;
+		for (int x = 0; x < diamond.size(); ++x) {
+			for (int y = 0; y < diamond.size(); ++y) {
+				double temp = diamond.get(x, y);
+				 if (temp > 1)
+				 temp = 1;
+				 if (temp < 0)
+				 temp = 0;
 				writer.setColor(x, y, Color.gray(temp));
 			}
 
 		}
+//		MidpointDisplacement mid = new MidpointDisplacement();
+//		double[][] map = mid.getMap();
+//		for (int x = 0; x < map.length; ++x) {
+//			for (int y = 0; y < map.length; ++y) {
+//				double temp = map[x][y];
+//				 if (temp > 1)
+//				 temp = 1;
+//				 if (temp < 0)
+//				 temp = 0;
+//				writer.setColor(x, y, Color.gray(temp));
+//			}
+//
+//		}
 
 		File file = new File("heightmap.png");
 		try {
@@ -66,20 +118,22 @@ public class TerrainGenerator extends Application {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private Image createTerrain() throws IOException {
-		Image image = SwingFXUtils.toFXImage(ImageIO.read(new File("heightmap.png")), null);
+		Image image = SwingFXUtils.toFXImage(
+				ImageIO.read(new File("heightmap.png")), null);
 		PixelReader reader = image.getPixelReader();
 		WritableImage wImage = new WritableImage(MAP_SIZE, MAP_SIZE);
 		PixelWriter writer = wImage.getPixelWriter();
-			
-			for(int x = 0; x < wImage.getWidth(); x++) {
-				for(int y = 0; y < wImage.getHeight(); y++) {
-					double height = reader.getColor(x, y).getRed();
-					Color c = Biom.heightToBiom(height);
-					writer.setColor(x, y, c);
-				}
+
+		for (int x = 0; x < wImage.getWidth(); x++) {
+			for (int y = 0; y < wImage.getHeight(); y++) {
+				double height = reader.getColor(x, y).getRed();
+				Color c = Biom.heightToBiom(height);
+				writer.setColor(x, y, c);
 			}
+		}
+		
 		return wImage;
 	}
 
@@ -91,7 +145,7 @@ public class TerrainGenerator extends Application {
 		Canvas canvas = new Canvas(MAP_SIZE, MAP_SIZE);
 		GraphicsContext gc = canvas.getGraphicsContext2D();
 		gc.drawImage(image, 0, 0);
-		
+
 		root.getChildren().add(canvas);
 		primaryStage.setScene(new Scene(root));
 		primaryStage.show();
