@@ -6,6 +6,7 @@ public class Biom {
 	private enum BiomEnum {
 		DEEP_WATER(0.3f, Color.DARKBLUE),
 		SHALLOW_WATER(0.5f, Color.BLUE),
+		SAND(0.52f, Color.SANDYBROWN),
 		GRASS(0.7f, Color.GREEN),
 		HILLS(0.85f, Color.LIGHTGRAY),
 		MOUNTAIN(0.95f, Color.DARKGRAY);
@@ -25,6 +26,9 @@ public class Biom {
 		}
 		else if(height < BiomEnum.SHALLOW_WATER.threshold) {
 			return BiomEnum.SHALLOW_WATER.color;
+		}
+		else if(height < BiomEnum.SAND.threshold) {
+			return BiomEnum.SAND.color;
 		}
 		else if(height < BiomEnum.GRASS.threshold) {
 			return BiomEnum.GRASS.color;

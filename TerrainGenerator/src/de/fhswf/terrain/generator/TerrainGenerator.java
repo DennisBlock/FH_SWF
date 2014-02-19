@@ -21,14 +21,14 @@ import javax.imageio.ImageIO;
 public class TerrainGenerator extends Application {
 
 	
-	public static final int MAP_SIZE = 1025;
+	public static final int MAP_SIZE = 513;
 
 	private DiamondSquare diamond;
 	
 	private Image image;
 
 	public TerrainGenerator() {
-		diamond = new DiamondSquare(MAP_SIZE, 1.0);
+		diamond = new DiamondSquare(MAP_SIZE, 3.0);
 
 		createHeightmapImage();
 		try {
