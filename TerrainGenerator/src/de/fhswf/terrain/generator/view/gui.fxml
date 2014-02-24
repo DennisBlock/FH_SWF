@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.collections.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.text.*?>
+
+<BorderPane minHeight="400.0" minWidth="600.0" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="de.fhswf.terrain.generator.view.GuiController">
+  <!-- TODO Add Nodes -->
+  <center>
+    <SplitPane disable="false" dividerPositions="0.40301003344481606" focusTraversable="true" prefHeight="160.0" prefWidth="200.0">
+      <items>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+          <children>
+            <Accordion minHeight="374.0" minWidth="238.0" prefHeight="374.0" prefWidth="238.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+              <expandedPane>
+                <TitledPane fx:id="x1" animated="false" text="General Settings">
+                  <content>
+                    <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                      <children>
+                        <GridPane layoutX="14.0" layoutY="11.5" prefHeight="114.0" prefWidth="202.0">
+                          <children>
+                            <Label text="Terrain Size:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                            <Label text="Seed:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                            <TextField fx:id="seedTextField" prefWidth="73.0" text="9894561332" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                            <Label text="H:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                            <TextField fx:id="hTextField" prefWidth="73.0" text="2" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                            <ComboBox fx:id="terrainSizeComboBox" editable="false" prefHeight="21.0" prefWidth="98.0" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                              <items>
+                                <FXCollections fx:factory="observableArrayList">
+                                  <String fx:value="Item 1" />
+                                  <String fx:value="Item 2" />
+                                  <String fx:value="Item 3" />
+                                </FXCollections>
+                              </items>
+                            </ComboBox>
+                          </children>
+                          <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                        </GridPane>
+                      </children>
+                    </AnchorPane>
+                  </content>
+                </TitledPane>
+              </expandedPane>
+              <panes>
+                <fx:reference source="x1" />
+                <TitledPane fx:id="x2" animated="false" text="Biome Settings">
+                  <content>
+                    <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                      <children>
+                        <GridPane layoutX="7.0" layoutY="14.0" prefWidth="220.0" scaleX="1.0" scaleY="1.0" scaleZ="1.0">
+                          <children>
+                            <Label text="Deep Water" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                            <Label text="Water" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                            <Label text="Strand" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                            <Label text="Tal" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                            <Label text="Hügel" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                            <Label text="Gebirge" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+                            <Slider fx:id="deepWaterSlider" max="1.0" value="0.2" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                            <Slider id="WaterSlider" fx:id="waterSlider" max="1.0" value="0.5" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                            <Slider fx:id="sandSlider" max="1.0" value="0.52" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                            <Slider id="talSlider" fx:id="grassSlider" max="1.0" value="0.76" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                            <Slider id="grass" fx:id="hillsSlider" max="1.0" value="0.85" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                            <Slider fx:id="mountainSlider" max="1.0" value="0.95" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                            <Label text="Schneegebirge" GridPane.columnIndex="0" GridPane.rowIndex="6" />
+                            <Label fx:id="deepWaterLabel" text="Label" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+                            <Label fx:id="waterLabel" text="Label" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                            <Label fx:id="sandLabel" text="Label" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                            <Label fx:id="grassLabel" text="Label" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                            <Label fx:id="hillsLabel" text="Label" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+                            <Label fx:id="mountainLabel" text="Label" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+                            <Label fx:id="everestLabel" text="Label" GridPane.columnIndex="2" GridPane.rowIndex="6" />
+                            <Slider id="mountainSlider" fx:id="everestSlider" max="1.0" value="1.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                          </children>
+                          <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="103.0" minWidth="10.0" prefWidth="86.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="172.0" minWidth="10.0" prefWidth="107.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="131.0" minWidth="10.0" prefWidth="27.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                        </GridPane>
+                      </children>
+                    </AnchorPane>
+                  </content>
+                </TitledPane>
+              </panes>
+            </Accordion>
+          </children>
+        </AnchorPane>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+          <children>
+            <Button id="generateBtn" fx:id="generateButton" mnemonicParsing="false" onMouseClicked="#generateAction" prefHeight="22.0" prefWidth="354.0" text="Generate" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+            <StackPane prefHeight="326.0" prefWidth="354.0" AnchorPane.bottomAnchor="37.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="11.0">
+              <children>
+                <ImageView fx:id="mapImageView" fitHeight="257.875" fitWidth="343.8333540806603" pickOnBounds="true" preserveRatio="true" />
+              </children>
+            </StackPane>
+          </children>
+        </AnchorPane>
+      </items>
+    </SplitPane>
+  </center>
+  <top>
+    <MenuBar fx:id="menuBar">
+      <menus>
+        <Menu mnemonicParsing="false" text="File">
+          <items>
+            <MenuItem mnemonicParsing="false" onAction="#handleSave" text="Save" />
+            <MenuItem mnemonicParsing="false" onAction="#handleExit" text="Close" />
+          </items>
+        </Menu>
+        <Menu mnemonicParsing="false" text="Edit">
+          <items>
+            <MenuItem mnemonicParsing="false" text="Generate" />
+          </items>
+        </Menu>
+        <Menu mnemonicParsing="false" text="Help">
+          <items>
+            <MenuItem mnemonicParsing="false" onAction="#handleAbout" text="About" />
+          </items>
+        </Menu>
+      </menus>
+    </MenuBar>
+  </top>
+</BorderPane>

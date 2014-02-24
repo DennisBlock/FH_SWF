@@ -11,7 +11,7 @@ public class DiamondSquare {
 
 	private Normalizer normalizer;
 
-	public DiamondSquare(int size, double h) {
+	public DiamondSquare(int size, double h, long seed) {
 		if (!isPowerOfTwo(size - 1))
 			throw new IllegalArgumentException("Die Groesse muss 2^n+1 sein.");
 
@@ -19,7 +19,7 @@ public class DiamondSquare {
 		this.size = size;
 		this.h = h;
 
-		random = new Random(98945613323468587L);
+		random = new Random(seed);
 		normalizer = new Normalizer(1.0, -1.0, 1.0, 0.0);
 	}
 
