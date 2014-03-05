@@ -3,6 +3,22 @@ package de.fhswf.terrain.generator;
 import javafx.scene.paint.Color;
 
 public class Biom {
+	private enum BiomType {
+		DEEP_WATER(Color.DARKBLUE),
+		SHALLOW_WATER(Color.BLUE),
+		SAND(Color.SANDYBROWN),
+		GRASS(Color.GREEN),
+		HILLS(Color.DARKGRAY),
+		MOUNTAIN(Color.LIGHTGRAY),
+		EVEREST(Color.WHITE);
+		
+		private Color color;
+		
+		BiomType(Color color){
+			this.color = color;
+		}
+	}
+
 	private double deepWater;
 	private double water;
 	private double sand;
@@ -22,22 +38,6 @@ public class Biom {
 		this.everest = everest;
 	}
 
-	private enum BiomType {
-		DEEP_WATER(Color.DARKBLUE),
-		SHALLOW_WATER(Color.BLUE),
-		SAND(Color.SANDYBROWN),
-		GRASS(Color.GREEN),
-		HILLS(Color.DARKGRAY),
-		MOUNTAIN(Color.LIGHTGRAY),
-		EVEREST(Color.WHITE);
-		
-		private Color color;
-		
-		BiomType(Color color){
-			this.color = color;
-		}
-	}
-	
 	public Color heightToBiom(double height) {
 		if( height < deepWater) {
 			return BiomType.DEEP_WATER.color;

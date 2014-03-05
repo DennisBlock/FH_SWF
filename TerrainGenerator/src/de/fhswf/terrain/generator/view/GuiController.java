@@ -248,6 +248,7 @@ public class GuiController {
 
 			mapImageView.setImage(terrain.createTerrain(deepWater, water, sand,
 					grass, hills, mountain, everest));
+			new RenderThread().start();
 		}
 	}
 
@@ -317,6 +318,45 @@ public class GuiController {
 	@FXML
 	private void handleExit() {
 		System.exit(0);
+	}
+
+	private class RenderThread extends Thread {
+
+		private double deepWater;
+		private double water;
+		private double sand;
+		private double grass;
+		private double hills;
+		private double mountain;
+		private double everest;
+		private int size;
+
+		public RenderThread() {
+			deepWater = deepWaterSlider.getValue();
+			water = waterSlider.getValue();
+			sand = sandSlider.getValue();
+			grass = grassSlider.getValue();
+			hills = hillsSlider.getValue();
+			mountain = mountainSlider.getValue();
+			everest = everestSlider.getValue();
+
+			if (terrainSizeComboBox.getValue() == "513x513") {
+				size = 513;
+			} else {
+				size = 1025;
+			}
+		}
+
+		@Override
+		public void run() {
+			Terrain terrain = new Terrain(size, Double.valueOf(hTextField
+					.getText()), Double.valueOf(seedTextField.getText())
+					.longValue());
+
+			mapImageView.setImage(terrain.createTerrain(deepWater, water, sand,
+					grass, hills, mountain, everest));
+		}
+
 	}
 
 }
