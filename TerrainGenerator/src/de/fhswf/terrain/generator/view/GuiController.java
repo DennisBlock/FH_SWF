@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.Random;
-import java.util.regex.Pattern;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -76,25 +75,6 @@ public class GuiController {
 	private void initialize() {
 
 		terrainGenerator = new TerrainGenerator();
-		final Pattern wholeNumberPattern = Pattern.compile("\\d*");
-		seedTextField.textProperty().addListener(new ChangeListener<String>() {
-			public void changed(
-					final ObservableValue<? extends String> observableValue,
-					final String oldValue, final String newValue) {
-				if (!wholeNumberPattern.matcher(newValue).matches())
-					seedTextField.setText(oldValue);
-			}
-		});
-		
-		hTextField.textProperty().addListener(new ChangeListener<String>() {
-			public void changed(
-					final ObservableValue<? extends String> observableValue,
-					final String oldValue, final String newValue) {
-				if (!wholeNumberPattern.matcher(newValue).matches())
-					hTextField.setText(oldValue);
-			}
-		});
-
 		final DecimalFormat f = new DecimalFormat("#0.00");
 		ObservableList<String> options = FXCollections.observableArrayList(
 				"513x513", "1025x1025");
@@ -208,46 +188,8 @@ public class GuiController {
 	}
 
 	@FXML
-	private void handleRandomSeed() {
-		if (seedCheckBox.isSelected()) {
-			seedTextField.setDisable(true);
-		} else {
-			seedTextField.setDisable(false);
-		}
-	}
-
-	@FXML
 	private void generateAction() {
 		if (isInputValid()) {
-			double deepWater = deepWaterSlider.getValue();
-			double water = waterSlider.getValue();
-			double sand = sandSlider.getValue();
-			double grass = grassSlider.getValue();
-			double hills = hillsSlider.getValue();
-			double mountain = mountainSlider.getValue();
-			double everest = everestSlider.getValue();
-
-			int size;
-			if (terrainSizeComboBox.getValue() == "513x513") {
-				size = 513;
-			} else {
-				size = 1025;
-			}
-
-			long seed;
-
-			if (seedCheckBox.isSelected()) {
-				Random rand = new Random();
-				seed = rand.nextLong();
-				seedTextField.setText(seed + "");
-			} else {
-				seed = Double.valueOf(seedTextField.getText()).longValue();
-			}
-			Terrain terrain = new Terrain(size, Double.valueOf(hTextField
-					.getText()), seed);
-
-			mapImageView.setImage(terrain.createTerrain(deepWater, water, sand,
-					grass, hills, mountain, everest));
 			new RenderThread().start();
 		}
 	}
@@ -311,6 +253,15 @@ public class GuiController {
 				"Autoren: Dennis Block, Greogr Block\nAusarbeitung: Spezielle Algorithmen",
 				"TerrainGenerator", "About");
 	}
+	
+	@FXML
+	private void handleRandomSeed() {
+		if (seedCheckBox.isSelected()) {
+			seedTextField.setDisable(true);
+		} else {
+			seedTextField.setDisable(false);
+		}
+	}
 
 	/**
 	 * Closes the application.
@@ -330,6 +281,7 @@ public class GuiController {
 		private double mountain;
 		private double everest;
 		private int size;
+		long seed;
 
 		public RenderThread() {
 			deepWater = deepWaterSlider.getValue();
@@ -345,7 +297,16 @@ public class GuiController {
 			} else {
 				size = 1025;
 			}
+
+			if (seedCheckBox.isSelected()) {
+				Random rand = new Random();
+				seed = rand.nextLong();
+				seedTextField.setText(seed + "");
+			} else {
+				seed = Double.valueOf(seedTextField.getText()).longValue();
+			}
 		}
+		
 
 		@Override
 		public void run() {
@@ -356,7 +317,5 @@ public class GuiController {
 			mapImageView.setImage(terrain.createTerrain(deepWater, water, sand,
 					grass, hills, mountain, everest));
 		}
-
 	}
-
 }
