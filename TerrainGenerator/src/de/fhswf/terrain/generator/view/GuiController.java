@@ -3,6 +3,8 @@ package de.fhswf.terrain.generator.view;
 import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.util.Random;
+import java.util.regex.Pattern;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -11,6 +13,7 @@ import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Dialogs;
 import javafx.scene.control.Label;
@@ -64,14 +67,35 @@ public class GuiController {
 	private TextField hTextField;
 	@FXML
 	private ImageView mapImageView;
+	@FXML
+	private CheckBox seedCheckBox;
 
 	private TerrainGenerator terrainGenerator;
 
 	@FXML
 	private void initialize() {
-		
+
 		terrainGenerator = new TerrainGenerator();
-		final DecimalFormat f = new DecimalFormat("#0.00"); 
+		final Pattern wholeNumberPattern = Pattern.compile("\\d*");
+		seedTextField.textProperty().addListener(new ChangeListener<String>() {
+			public void changed(
+					final ObservableValue<? extends String> observableValue,
+					final String oldValue, final String newValue) {
+				if (!wholeNumberPattern.matcher(newValue).matches())
+					seedTextField.setText(oldValue);
+			}
+		});
+		
+		hTextField.textProperty().addListener(new ChangeListener<String>() {
+			public void changed(
+					final ObservableValue<? extends String> observableValue,
+					final String oldValue, final String newValue) {
+				if (!wholeNumberPattern.matcher(newValue).matches())
+					hTextField.setText(oldValue);
+			}
+		});
+
+		final DecimalFormat f = new DecimalFormat("#0.00");
 		ObservableList<String> options = FXCollections.observableArrayList(
 				"513x513", "1025x1025");
 		terrainSizeComboBox.setItems(options);
@@ -95,7 +119,8 @@ public class GuiController {
 							deepWaterLabel.setText("");
 							return;
 						}
-						deepWaterLabel.setText(f.format(newValue.doubleValue()) + "");
+						deepWaterLabel.setText(f.format(newValue.doubleValue())
+								+ "");
 					}
 				});
 
@@ -161,7 +186,8 @@ public class GuiController {
 							mountainLabel.setText("");
 							return;
 						}
-						mountainLabel.setText(f.format(newValue.doubleValue()) + "");
+						mountainLabel.setText(f.format(newValue.doubleValue())
+								+ "");
 					}
 				});
 
@@ -182,6 +208,15 @@ public class GuiController {
 	}
 
 	@FXML
+	private void handleRandomSeed() {
+		if (seedCheckBox.isSelected()) {
+			seedTextField.setDisable(true);
+		} else {
+			seedTextField.setDisable(false);
+		}
+	}
+
+	@FXML
 	private void generateAction() {
 		if (isInputValid()) {
 			double deepWater = deepWaterSlider.getValue();
@@ -198,9 +233,18 @@ public class GuiController {
 			} else {
 				size = 1025;
 			}
+
+			long seed;
+
+			if (seedCheckBox.isSelected()) {
+				Random rand = new Random();
+				seed = rand.nextLong();
+				seedTextField.setText(seed + "");
+			} else {
+				seed = Double.valueOf(seedTextField.getText()).longValue();
+			}
 			Terrain terrain = new Terrain(size, Double.valueOf(hTextField
-					.getText()), Double.valueOf(seedTextField.getText())
-					.longValue());
+					.getText()), seed);
 
 			mapImageView.setImage(terrain.createTerrain(deepWater, water, sand,
 					grass, hills, mountain, everest));
