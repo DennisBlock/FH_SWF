@@ -71,6 +71,8 @@ public class GuiController {
 	@FXML
 	private ImageView mapImageView;
 	@FXML
+	private ImageView heightMapImageView;
+	@FXML
 	private CheckBox seedCheckBox;
 
 	private TerrainGenerator terrainGenerator;
@@ -376,6 +378,7 @@ public class GuiController {
 			// Set the created map to the ImageView
 			mapImageView.setImage(terrain.createTerrain(deepWater, water, sand,
 					grass, hills, mountain, everest));
+			heightMapImageView.setImage(terrain.getHeightmap());
 		}
 	}
 }

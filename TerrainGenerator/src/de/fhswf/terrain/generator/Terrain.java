@@ -21,6 +21,7 @@ public class Terrain {
 
 	private int size;	// Size of the map
 	private DiamondSquare diamond;  // Diamond-Square algorithm
+	private Image heightmap;
 
 	/**
 	 * Constructor.
@@ -53,9 +54,9 @@ public class Terrain {
 				everest);
 		
 		// Generate a normalized heightmap
-		Image image = createHeightmapImage();
+		heightmap = createHeightmapImage();
 		
-		PixelReader reader = image.getPixelReader();
+		PixelReader reader = heightmap.getPixelReader();
 		WritableImage wImage = new WritableImage(size, size);
 		PixelWriter writer = wImage.getPixelWriter();
 
@@ -212,5 +213,13 @@ public class Terrain {
 			}
 		}
 		return dest; // Blured Terrain Image
+	}
+
+	/**
+	 * Getter for the heightmap image.
+	 * @return heightmap Generated heightmap image.
+	 */
+	public Image getHeightmap() {
+		return heightmap;
 	}
 }
