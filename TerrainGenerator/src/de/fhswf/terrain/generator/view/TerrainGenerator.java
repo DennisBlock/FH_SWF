@@ -6,6 +6,10 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
+/**
+ * Start der applikation.
+ * Verknüpft Model, View und Controller Klassen.
+ */
 public class TerrainGenerator extends Application {
 	
 	private Stage primaryStage;
@@ -15,6 +19,7 @@ public class TerrainGenerator extends Application {
 		this.primaryStage = primaryStage;
 		this.primaryStage.setTitle("Terrain Generator");
 		try {
+			// Ladet das BorderPane Layout aus der gui fxml Datei
 			BorderPane root = (BorderPane)FXMLLoader.load(getClass().getResource("gui.fxml"));
 			Scene scene = new Scene(root);
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());

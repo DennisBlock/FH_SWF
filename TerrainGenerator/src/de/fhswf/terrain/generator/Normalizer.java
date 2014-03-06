@@ -1,7 +1,6 @@
 package de.fhswf.terrain.generator;
 
 public class Normalizer {
-
 	private double upperBound;
 	private double lowerBound;
 	private double normalizedUpperBound;

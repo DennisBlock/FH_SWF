@@ -11,6 +11,16 @@ public class DiamondSquare {
 
 	private Normalizer normalizer;
 
+	/**
+	 * Constructor
+	 * 
+	 * @param size
+	 *            Size of the map.
+	 * @param h
+	 *            The range (-h -> +h) for the average offset.
+	 * @param seed
+	 *            Initial seed value for the random generator.
+	 */
 	public DiamondSquare(int size, double h, long seed) {
 		if (!isPowerOfTwo(size - 1))
 			throw new IllegalArgumentException("Die Groesse muss 2^n+1 sein.");
@@ -23,10 +33,90 @@ public class DiamondSquare {
 		normalizer = new Normalizer(1.0, -1.0, 1.0, 0.0);
 	}
 
+	public void generateHeightmap() {
+
+		// map[0][0] = random.nextDouble();
+		// map[0][size - 1] = random.nextDouble();
+		// map[size - 1][0] = random.nextDouble();
+		// map[size - 1][size - 1] = random.nextDouble();
+
+		map[0][0] = map[0][size - 1] = map[size - 1][0] = map[size - 1][size - 1] = random
+				.nextDouble();
+
+		for (int sideLength = size - 1; sideLength >= 2; sideLength /= 2, h /= 2.0) {
+			int halfSide = sideLength / 2;
+
+			squareStep(sideLength, halfSide);
+
+			diamondStep(sideLength, halfSide);
+		}
+
+		for (int i = 0; i < map.length; i++) {
+			for (int j = 0; j < map.length; j++) {
+				map[i][j] = (float) (map[i][j] <= 0 ? -Math.sqrt(Math
+						.abs(map[i][j])) : map[i][j]);
+			}
+		}
+	}
+
+	private void diamondStep(int sideLength, int halfSide) {
+		// generate the diamond values
+		for (int x = 0; x < size - 1; x += halfSide) {
+			for (int y = (x + halfSide) % sideLength; y < size - 1; y += sideLength) {
+				// double average = map[(x - halfSide + size) % size][y] + // left
+				// map[(x + halfSide) % size][y] + // right of center
+				// map[x][(y + halfSide) % size] + // below center
+				// map[x][(y - halfSide + size) % size]; // above
+				double average = map[(x - halfSide + size - 1) % (size - 1)][y] + // left
+																				// of
+																				// center
+						map[(x + halfSide) % (size - 1)][y] + // right of center
+						map[x][(y + halfSide) % (size - 1)] + // below center
+						map[x][(y - halfSide + size - 1) % (size - 1)]; // above
+																		// center
+				average /= 4.0;
+
+				average = average + (random.nextDouble() * 2 * h) - h;
+				// update value for center of diamond
+				map[x][y] = average;
+
+				if (x == 0)
+					map[size - 1][y] = average;
+				if (y == 0)
+					map[x][size - 1] = average;
+			}
+		}
+	}
+
+	private void squareStep(int sideLength, int halfSide) {
+		// generate the new square values
+		for (int x = 0; x < size - 1; x += sideLength) {
+			for (int y = 0; y < size - 1; y += sideLength) {
+				double average = map[x][y] + // top left
+						map[x + sideLength][y] + // top right
+						map[x][y + sideLength] + // lower left
+						map[x + sideLength][y + sideLength];// lower right
+				average /= 4.0;
+
+				double temp = (average + (random.nextDouble() * 2 * h) - h);
+
+				// set negative values to 1
+				map[x + halfSide][y + halfSide] = temp > 1 ? 1 : temp;
+			}
+		}
+	}
+
 	public void normalize() {
 		for (int x = 0; x < map.length; x++) {
 			for (int y = 0; y < map.length; y++) {
-				map[x][y] = normalizer.normalize(map[x][y]);
+				double temp = normalizer.normalize(map[x][y]);
+				if (temp > 1) {
+					temp = 1;
+				}
+				if (temp < 0) {
+					temp = 0;
+				}
+				map[x][y] = temp;
 			}
 		}
 	}
@@ -52,59 +142,6 @@ public class DiamondSquare {
 			System.out.println();
 		}
 	}
-
-	public void generateHeightmap() {
-
-		map[0][0] = random.nextDouble();
-		map[0][size - 1] = random.nextDouble();
-		map[size - 1][0] = random.nextDouble();
-		map[size - 1][size - 1] = random.nextDouble();
-
-		for (int sideLength = size - 1; sideLength >= 2; sideLength /= 2, h /= 2.0) {
-			int halfSide = sideLength / 2;
-
-			// generate the new square values
-			for (int x = 0; x < size - 1; x += sideLength) {
-				for (int y = 0; y < size - 1; y += sideLength) {
-					double avg = map[x][y] + // top left
-							map[x + sideLength][y] + // top right
-							map[x][y + sideLength] + // lower left
-							map[x + sideLength][y + sideLength];// lower right
-					avg /= 4.0;
-
-					double temp = (avg + (random.nextDouble() * 2 * h) - h);
-					map[x + halfSide][y + halfSide] = temp > 1 ? 1 : temp;
-				}
-			}
-
-			// generate the diamond values
-			for (int x = 0; x < size - 1; x += halfSide) {
-				for (int y = (x + halfSide) % sideLength; y < size - 1; y += sideLength) {
-					double avg = map[(x - halfSide + size) % size][y] + // left
-							map[(x + halfSide) % size][y] + // right of center
-							map[x][(y + halfSide) % size] + // below center
-							map[x][(y - halfSide + size) % size]; // above
-					avg /= 4.0;
-
-					avg = avg + (random.nextDouble() * 2 * h) - h;
-					// update value for center of diamond
-					map[x][y] = avg;
-
-					if (x == 0)
-						map[size - 1][y] = avg;
-					if (y == 0)
-						map[x][size - 1] = avg;
-				}
-			}
-		}
-		for (int i = 0; i < map.length; i++) {
-			for (int j = 0; j < map.length; j++) {
-				map[i][j] = (float) (map[i][j] <= 0 ? -Math.sqrt(Math
-						.abs(map[i][j])) : map[i][j]);
-			}
-		}
-	}
-
 	public int size() {
 		return size;
 	}

@@ -27,6 +27,10 @@ import javax.imageio.ImageIO;
 
 import de.fhswf.terrain.generator.Terrain;
 
+/**
+ * The controller for the gui. This class provides the basic application layout
+ * containing a menu bar and space where other JavaFX elements can be placed.
+ */
 public class GuiController {
 	@FXML
 	private Button generateButton;
@@ -71,16 +75,24 @@ public class GuiController {
 
 	private TerrainGenerator terrainGenerator;
 
+	/**
+	 * Initializes the controller class. This method is automatically called
+	 * after the fxml file has been loaded.
+	 */
 	@FXML
 	private void initialize() {
 
 		terrainGenerator = new TerrainGenerator();
 		final DecimalFormat f = new DecimalFormat("#0.00");
+		// Map size data as an observable list of Strings
 		ObservableList<String> options = FXCollections.observableArrayList(
 				"513x513", "1025x1025");
+
 		terrainSizeComboBox.setItems(options);
+		// Set 1025x1025 as default value
 		terrainSizeComboBox.setValue("1025x1025");
 
+		// Set the labels with the pretended biom values
 		deepWaterLabel.setText(f.format(deepWaterSlider.getValue()) + "");
 		waterLabel.setText(f.format(waterSlider.getValue()) + "");
 		sandLabel.setText(f.format(sandSlider.getValue()) + "");
@@ -89,6 +101,20 @@ public class GuiController {
 		mountainLabel.setText(f.format(mountainSlider.getValue()) + "");
 		everestLabel.setText(f.format(everestSlider.getValue()) + "");
 
+		// Add listener to the sliders to change the labels.
+		addListenerToSliders(f);
+
+		// Generate a map
+		generateAction();
+	}
+
+	/**
+	 * Add listener to the sliders to change the labels.
+	 * 
+	 * @param f
+	 *            Decimal format for the output eg. 0.00
+	 */
+	private void addListenerToSliders(final DecimalFormat f) {
 		deepWaterSlider.valueProperty().addListener(
 				new ChangeListener<Number>() {
 					@Override
@@ -183,17 +209,27 @@ public class GuiController {
 				everestLabel.setText(f.format(newValue.doubleValue()) + "");
 			}
 		});
-
-		generateAction();
 	}
 
+	/**
+	 * Called when the user clicks on Generate Button. Checks whether the
+	 * entries are correct and starts a thread which executes the DiamondSquare
+	 * algorithm.
+	 */
 	@FXML
 	private void generateAction() {
+		// Check input values
 		if (isInputValid()) {
-			new RenderThread().start();
+			// Run the DiamondSquare algorithm
+			new RenderThread().start(); 
 		}
 	}
 
+	/**
+	 * Validates the user input in the text fields.
+	 * 
+	 * @return true if the input is valid
+	 */
 	private boolean isInputValid() {
 		String errorMessage = "";
 
@@ -223,14 +259,18 @@ public class GuiController {
 	@FXML
 	private void handleSave() {
 
+		// Setup the FileChooser
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Save Image");
 		fileChooser.setInitialFileName("Terrain.png");
+		
+		// Show save file dialog
 		File file = fileChooser.showSaveDialog(terrainGenerator
 				.getPrimaryStage());
 
 		if (file != null) {
 			try {
+				// Writes an image
 				ImageIO.write(
 						SwingFXUtils.fromFXImage(mapImageView.getImage(), null),
 						"png", file);
@@ -248,14 +288,21 @@ public class GuiController {
 	 */
 	@FXML
 	private void handleAbout() {
+		
+		// Show save about dialog
 		Dialogs.showInformationDialog(
 				terrainGenerator.getPrimaryStage(),
 				"Autoren: Dennis Block, Greogr Block\nAusarbeitung: Spezielle Algorithmen",
 				"TerrainGenerator", "About");
 	}
-	
+
+	/**
+	 * Called when the user clicks on RandomSeed CheckBox
+	 */
 	@FXML
 	private void handleRandomSeed() {
+		
+		// Disable the seed TextField corresponding to the seed CheckBox
 		if (seedCheckBox.isSelected()) {
 			seedTextField.setDisable(true);
 		} else {
@@ -271,6 +318,11 @@ public class GuiController {
 		System.exit(0);
 	}
 
+	/**
+	 * Die Berechnung wird in einem eigenen Thread ausgeführt damit die
+	 * Oberfläche nicht "einfriert" und auch während der Berechnung weiter
+	 * bedienbar bleibt.
+	 */
 	private class RenderThread extends Thread {
 
 		private double deepWater;
@@ -283,7 +335,12 @@ public class GuiController {
 		private int size;
 		long seed;
 
+		/**
+		 * Initializes the RenderThread class. This method is automatically
+		 * called before the thread starts.
+		 */
 		public RenderThread() {
+			// Get the biom values 
 			deepWater = deepWaterSlider.getValue();
 			water = waterSlider.getValue();
 			sand = sandSlider.getValue();
@@ -292,12 +349,14 @@ public class GuiController {
 			mountain = mountainSlider.getValue();
 			everest = everestSlider.getValue();
 
+			// Set the size of the map/terrain
 			if (terrainSizeComboBox.getValue() == "513x513") {
 				size = 513;
 			} else {
 				size = 1025;
 			}
 
+			// Check whether random seed is selected 
 			if (seedCheckBox.isSelected()) {
 				Random rand = new Random();
 				seed = rand.nextLong();
@@ -306,14 +365,15 @@ public class GuiController {
 				seed = Double.valueOf(seedTextField.getText()).longValue();
 			}
 		}
-		
 
 		@Override
 		public void run() {
+			// Create a Terrain object with the given biom values
 			Terrain terrain = new Terrain(size, Double.valueOf(hTextField
 					.getText()), Double.valueOf(seedTextField.getText())
 					.longValue());
 
+			// Set the created map to the ImageView
 			mapImageView.setImage(terrain.createTerrain(deepWater, water, sand,
 					grass, hills, mountain, everest));
 		}
