@@ -32,10 +32,11 @@ public class Terrain {
 	 *            The range (-h -> +h) for the average offset.
 	 * @param seed
 	 *            Initial seed value for the random generator.
+	 * @param lowland 
 	 */
-	public Terrain(int mapSize, double h, long seed) {
+	public Terrain(int mapSize, double h, long seed, boolean lowland) {
 		size = mapSize;
-		diamond = new DiamondSquare(mapSize, h, seed);
+		diamond = new DiamondSquare(mapSize, h, seed, lowland);
 	}
 
 	/**

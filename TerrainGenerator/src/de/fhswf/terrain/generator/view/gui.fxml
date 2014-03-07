@@ -21,7 +21,7 @@
                   <content>
                     <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                       <children>
-                        <GridPane layoutX="14.0" layoutY="11.5" prefHeight="114.0" prefWidth="202.0">
+                        <GridPane layoutX="16.0" layoutY="12.0" prefHeight="139.5" prefWidth="202.0">
                           <children>
                             <Label text="Terrain Size:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
                             <Label text="Seed:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
@@ -37,13 +37,17 @@
                                 </FXCollections>
                               </items>
                             </ComboBox>
-                            <CheckBox fx:id="seedCheckBox" mnemonicParsing="false" onAction="#handleRandomSeed" text="Zufallsseed" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                            <CheckBox fx:id="seedCheckBox" mnemonicParsing="false" onAction="#handleRandomSeed" text="" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                            <Label text="Flachland:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                            <CheckBox fx:id="lowlandCheckBox" mnemonicParsing="false" text="" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                            <Label text="Zufallsseed:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
                           </children>
                           <columnConstraints>
                             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                           </columnConstraints>
                           <rowConstraints>
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -125,7 +129,7 @@
                     </AnchorPane>
                   </content>
                 </Tab>
-                <Tab text="Heightmap">
+                <Tab onClosed="#handleSaveHeightmap" text="Heightmap">
                   <content>
                     <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                       <children>
@@ -151,7 +155,8 @@
       <menus>
         <Menu mnemonicParsing="false" text="File">
           <items>
-            <MenuItem mnemonicParsing="false" onAction="#handleSave" text="Save" />
+            <MenuItem mnemonicParsing="false" onAction="#handleSaveTerrain" text="Save Terrain" />
+            <MenuItem mnemonicParsing="false" onAction="#handleSaveHeightmap" text="Save Heightmap" />
             <MenuItem mnemonicParsing="false" onAction="#handleExit" text="Close" />
           </items>
         </Menu>

@@ -74,6 +74,8 @@ public class GuiController {
 	private ImageView heightMapImageView;
 	@FXML
 	private CheckBox seedCheckBox;
+	@FXML
+	private CheckBox lowlandCheckBox;  
 
 	private TerrainGenerator terrainGenerator;
 
@@ -259,11 +261,11 @@ public class GuiController {
 	 * Opens a FileChooser to let the user select a file to save to.
 	 */
 	@FXML
-	private void handleSave() {
+	private void handleSaveTerrain() {
 
 		// Setup the FileChooser
 		FileChooser fileChooser = new FileChooser();
-		fileChooser.setTitle("Save Image");
+		fileChooser.setTitle("Save Terrain Image");
 		fileChooser.setInitialFileName("Terrain.png");
 		
 		// Show save file dialog
@@ -275,6 +277,35 @@ public class GuiController {
 				// Writes an image
 				ImageIO.write(
 						SwingFXUtils.fromFXImage(mapImageView.getImage(), null),
+						"png", file);
+			} catch (IOException ex) {
+				System.out.println(ex.getMessage());
+				Dialogs.showErrorDialog(terrainGenerator.getPrimaryStage(),
+						"Could not save image to file:\n" + file.getPath(),
+						"Could not save data", "Error", ex);
+			}
+		}
+	}
+	/**
+	 * Opens a FileChooser to let the user select a file to save to.
+	 */
+	@FXML
+	private void handleSaveHeightmap() {
+		
+		// Setup the FileChooser
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.setTitle("Save Heightmap Image");
+		fileChooser.setInitialFileName("Heightmap.png");
+		
+		// Show save file dialog
+		File file = fileChooser.showSaveDialog(terrainGenerator
+				.getPrimaryStage());
+		
+		if (file != null) {
+			try {
+				// Writes an image
+				ImageIO.write(
+						SwingFXUtils.fromFXImage(heightMapImageView.getImage(), null),
 						"png", file);
 			} catch (IOException ex) {
 				System.out.println(ex.getMessage());
@@ -335,7 +366,7 @@ public class GuiController {
 		private double mountain;
 		private double everest;
 		private int size;
-		long seed;
+		private long seed;
 
 		/**
 		 * Initializes the RenderThread class. This method is automatically
@@ -372,8 +403,7 @@ public class GuiController {
 		public void run() {
 			// Create a Terrain object with the given biom values
 			Terrain terrain = new Terrain(size, Double.valueOf(hTextField
-					.getText()), Double.valueOf(seedTextField.getText())
-					.longValue());
+					.getText()), seed, lowlandCheckBox.isSelected());
 
 			// Set the created map to the ImageView
 			mapImageView.setImage(terrain.createTerrain(deepWater, water, sand,

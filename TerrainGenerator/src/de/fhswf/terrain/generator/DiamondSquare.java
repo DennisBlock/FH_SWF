@@ -12,6 +12,7 @@ public class DiamondSquare {
 	private double h; // The range (-h -> +h) for the average offset
 	private Random random; // Pseudorandom generator
 	private Normalizer normalizer; // Normalize values from (-1 , 1) to (0 , 1)
+	private boolean lowland;
 
 	/**
 	 * Constructor
@@ -22,8 +23,9 @@ public class DiamondSquare {
 	 *            The range (-h -> +h) for the average offset.
 	 * @param seed
 	 *            Initial seed value for the random generator.
+	 * @param lowland
 	 */
-	public DiamondSquare(int size, double h, long seed) {
+	public DiamondSquare(int size, double h, long seed, boolean lowland) {
 		// Should be square, and the dimension should be a power of two, plus
 		// one (e.g. 33x33, 65x65, 129x129, etc.).
 		if (!isPowerOfTwo(size - 1))
@@ -32,7 +34,7 @@ public class DiamondSquare {
 		map = new double[size][size];
 		this.size = size;
 		this.h = h;
-
+		this.lowland = lowland;
 		// initialize the pseudorandom number generator with the seed. The same
 		// input will always produce the same output.
 		random = new Random(seed);
@@ -59,11 +61,21 @@ public class DiamondSquare {
 			diamondStep(sideLength);
 		}
 
-		// Ozean to uneven lowland mode 
-		for (int i = 0; i < map.length; i++) {
-			for (int j = 0; j < map.length; j++) {
-				map[i][j] = (float) (map[i][j] <= 0 ? Math.sqrt(Math
-						.abs(map[i][j])) : map[i][j]);
+		if (lowland) {
+			// Ocean to uneven lowland mode
+			for (int i = 0; i < map.length; i++) {
+				for (int j = 0; j < map.length; j++) {
+					map[i][j] = (float) (map[i][j] <= 0 ? Math.sqrt(Math
+							.abs(map[i][j])) : map[i][j]);
+				}
+			}
+		} else {
+			// Deeper ocean (more realistic)
+			for (int i = 0; i < map.length; i++) {
+				for (int j = 0; j < map.length; j++) {
+					map[i][j] = (float) (map[i][j] <= 0 ? -Math.sqrt(Math
+							.abs(map[i][j])) : map[i][j]);
+				}
 			}
 		}
 	}
@@ -98,6 +110,15 @@ public class DiamondSquare {
 			}
 		}
 	}
+
+	/**
+	 * Avarage the values
+	 * @param topLeft
+	 * @param topRight
+	 * @param lowerLeft
+	 * @param lowerRight
+	 * @return average 
+	 */
 	private double average(double topLeft, double topRight, double lowerLeft,
 			double lowerRight) {
 		return ((topLeft + topRight + lowerLeft + lowerRight) / 4.0);
