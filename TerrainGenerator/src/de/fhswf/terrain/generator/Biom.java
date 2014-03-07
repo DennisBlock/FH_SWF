@@ -15,6 +15,9 @@ public class Biom {
 	private double mountain;
 	private double everest;
 	
+	/**
+	 * Holds all Biomtypes with colors
+	 */
 	private enum BiomType {
 		DEEP_WATER(Color.DARKBLUE), SHALLOW_WATER(Color.BLUE), SAND(
 				Color.SANDYBROWN), GRASS(Color.GREEN), HILLS(Color.DARKGRAY), MOUNTAIN(

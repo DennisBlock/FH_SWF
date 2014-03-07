@@ -19,15 +19,19 @@ import javax.imageio.ImageIO;
  */
 public class Terrain {
 
-	private int size;	// Size of the map
-	private DiamondSquare diamond;  // Diamond-Square algorithm
+	private int size; // Size of the map
+	private DiamondSquare diamond; // Diamond-Square algorithm
 	private Image heightmap;
 
 	/**
 	 * Constructor.
-	 * @param mapSize Size of the map.
-	 * @param h	The range (-h -> +h) for the average offset.
-	 * @param seed Initial seed value for the random generator.
+	 * 
+	 * @param mapSize
+	 *            Size of the map.
+	 * @param h
+	 *            The range (-h -> +h) for the average offset.
+	 * @param seed
+	 *            Initial seed value for the random generator.
 	 */
 	public Terrain(int mapSize, double h, long seed) {
 		size = mapSize;
@@ -35,16 +39,23 @@ public class Terrain {
 	}
 
 	/**
-	 * This method generates a terrain image. 
-	 * @param deepWater Height of deep wather.
-	 * @param water Height of wather.
-	 * @param sand Height of sand.
-	 * @param grass Height of grass.
-	 * @param hills Height of hills.
-	 * @param mountain Height of mountain.
-	 * @param everest Height of everest (mountain whith snow).
-	 * @return image Blured Terrain Image.
-	}
+	 * This method generates a terrain image.
+	 * 
+	 * @param deepWater
+	 *            Height of deep wather.
+	 * @param water
+	 *            Height of wather.
+	 * @param sand
+	 *            Height of sand.
+	 * @param grass
+	 *            Height of grass.
+	 * @param hills
+	 *            Height of hills.
+	 * @param mountain
+	 *            Height of mountain.
+	 * @param everest
+	 *            Height of everest (mountain whith snow).
+	 * @return image Blured Terrain Image. }
 	 */
 	public Image createTerrain(double deepWater, double water, double sand,
 			double grass, double hills, double mountain, double everest) {
@@ -52,10 +63,10 @@ public class Terrain {
 		// Set the biom values
 		Biom biom = new Biom(deepWater, water, sand, grass, hills, mountain,
 				everest);
-		
+
 		// Generate a normalized heightmap
 		heightmap = createHeightmapImage();
-		
+
 		PixelReader reader = heightmap.getPixelReader();
 		WritableImage wImage = new WritableImage(size, size);
 		PixelWriter writer = wImage.getPixelWriter();
@@ -69,11 +80,13 @@ public class Terrain {
 			}
 		}
 
-		return blur2(wImage);
+		return blur(wImage);
 	}
-	
+
 	/**
-	 * This method generates a normalized heightmap and write an png image.
+	 * This method generates a normalized heightmap and write an grayscale
+	 * image. The image, with black representing minimum height and white
+	 * representing maximum height.
 	 */
 	private Image createHeightmapImage() {
 		diamond.generateHeightmap();
@@ -97,64 +110,17 @@ public class Terrain {
 		}
 		return image;
 	}
+
 	/**
-	 * Blur filter to reduce image noise and reduce detail. Blur is reading both
+	 * Blur filter to reduce image noise and reduce detail. Blur is reading the
 	 * neighbor pixels around target pixel, averaging these pixels color, and
-	 * then write the target pixel with the average color. BAD parformance!
+	 * then write the target pixel with the average color.
 	 * 
 	 * @param src
 	 *            Terrain Image.
 	 * @return dest Blured Terrain Image.
 	 */
 	private Image blur(Image src) {
-		WritableImage dest = new WritableImage(size, size);
-
-		PixelReader reader = src.getPixelReader();
-		PixelWriter writer = dest.getPixelWriter();
-
-		for (int x = 0; x < src.getWidth(); x++) {
-			for (int y = 0; y < src.getHeight(); y++) {
-
-				double red = 0;
-				double green = 0;
-				double blue = 0;
-				double alpha = 0;
-				int count = 0;
-
-				// Set the quantity of blur here
-				int kernelSize = 1;
-
-				// reading neighbor pixels
-				for (int i = -kernelSize; i <= kernelSize; i++) {
-					for (int j = -kernelSize; j <= kernelSize; j++) {
-						if (x + i < 0 || x + i >= src.getWidth() || y + j < 0
-								|| y + j >= src.getHeight()) {
-							continue;
-						}
-						Color color = reader.getColor(x + i, y + j);
-						red += color.getRed();
-						green += color.getGreen();
-						blue += color.getBlue();
-						alpha += color.getOpacity();
-						count++;
-					}
-				}
-				// Average color
-				Color blurColor = Color.color(red / count, green / count, blue
-						/ count, alpha / count);
-				writer.setColor(x, y, blurColor);
-			}
-		}
-		return dest; // Blured Terrain Image
-	}
-	/**
-	 * Decreasing the number of reading pixels
-	 * http://skrb.hatenablog.com/entry/2013/01/07/171901
-	 * 
-	 * @param src
-	 * @return
-	 */
-	private Image blur2(Image src) {
 
 		WritableImage dest = new WritableImage(size, size);
 		PixelReader reader = src.getPixelReader();
@@ -172,6 +138,7 @@ public class Terrain {
 				int kernelWidth = kernelSize * 2 + 1;
 				int kernelHeight = kernelSize * 2 + 1;
 
+				// Note x borders
 				if (centerX < 0) {
 					centerX = 0;
 					kernelWidth = x + kernelSize;
@@ -179,6 +146,7 @@ public class Terrain {
 					kernelWidth = (int) (src.getWidth() - centerX);
 				}
 
+				// Note y borders
 				if (centerY < 0) {
 					centerY = 0;
 					kernelHeight = y + kernelSize;
@@ -187,6 +155,7 @@ public class Terrain {
 				}
 
 				int[] buffer = new int[kernelWidth * kernelHeight];
+				// reading neighbor pixels
 				reader.getPixels(centerX, centerY, kernelWidth, kernelHeight,
 						format, buffer, 0, kernelWidth);
 
@@ -195,13 +164,15 @@ public class Terrain {
 				int green = 0;
 				int blue = 0;
 
+				// Get the colors from the buffer
 				for (int color : buffer) {
 					alpha += (color >>> 24);
 					red += (color >>> 16 & 0xFF);
 					green += (color >>> 8 & 0xFF);
 					blue += (color & 0xFF);
 				}
-
+				
+				// Average color
 				alpha = alpha / kernelWidth / kernelHeight;
 				red = red / kernelWidth / kernelHeight;
 				green = green / kernelWidth / kernelHeight;
@@ -217,6 +188,7 @@ public class Terrain {
 
 	/**
 	 * Getter for the heightmap image.
+	 * 
 	 * @return heightmap Generated heightmap image.
 	 */
 	public Image getHeightmap() {

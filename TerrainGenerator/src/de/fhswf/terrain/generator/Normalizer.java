@@ -1,5 +1,7 @@
 package de.fhswf.terrain.generator;
-
+/**
+ * Normalize the values from (-1 , 1) to (0 , 1)
+ */
 public class Normalizer {
 	private double upperBound;
 	private double lowerBound;
@@ -19,14 +21,22 @@ public class Normalizer {
 	}
 
 	public double normalize(double x) {
-		return ((x - lowerBound) / (upperBound - lowerBound))
+		double temp = ((x - lowerBound) / (upperBound - lowerBound))
 				* (normalizedUpperBound - normalizedLowerBound)
 				+ normalizedLowerBound;
+		
+		if (temp > 1) {
+			temp = 1;
+		}
+		if (temp < 0) {
+			temp = 0;
+		}
+		return temp;
 	}
 
 	public double denormalize(double x) {
-		return ((lowerBound - upperBound) * x - normalizedUpperBound * lowerBound + upperBound
-				* normalizedLowerBound)
+		return ((lowerBound - upperBound) * x - normalizedUpperBound
+				* lowerBound + upperBound * normalizedLowerBound)
 				/ (normalizedLowerBound - normalizedUpperBound);
 	}
 }
