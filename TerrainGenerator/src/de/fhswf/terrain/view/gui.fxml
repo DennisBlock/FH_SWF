@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.text.*?>
 
-<BorderPane minHeight="600.0" minWidth="600.0" prefHeight="400.0" prefWidth="850.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="de.fhswf.terrain.generator.view.GuiController">
+<BorderPane minHeight="600.0" minWidth="600.0" prefHeight="400.0" prefWidth="850.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="de.fhswf.terrain.view.GuiController">
   <!-- TODO Add Nodes -->
   <center>
     <SplitPane disable="false" dividerPositions="0.43160377358490565" focusTraversable="true" prefHeight="160.0" prefWidth="200.0">
