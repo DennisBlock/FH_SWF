@@ -9,7 +9,7 @@ import java.util.Random;
 public class DiamondSquare {
 	private double[][] map; // Heightmap
 	private int size; // Lenght of the heightmap
-	private double h; // The range (-h -> +h) for the average offset
+	private double h; // The range (-h -> +h) for the average offset (smoothing Factor)
 	private Random random; // Pseudorandom generator
 	private Normalizer normalizer; // Normalize values from (-1 , 1) to (0 , 1)
 	private boolean lowland;
@@ -86,6 +86,12 @@ public class DiamondSquare {
 	 * averaging the corner values, plus a random amount generated in the same
 	 * range as used for the diamond step. This gives you squares again.
 	 * 
+	 * topLeft					topRight
+	 * 
+	 * 			  		X,Y
+	 * 
+	 * lowerLeft				lowerRight
+	 * 
 	 * @param sideLength
 	 *            Distance of a single square.
 	 * @param halfSide
@@ -102,8 +108,10 @@ public class DiamondSquare {
 				double lowerLeft = map[x][y + sideLength];
 				double lowerRight = map[x + sideLength][y + sideLength];
 
+				// calculate the avarege
 				double average = average(topLeft, topRight, lowerLeft,
 						lowerRight);
+				// new value is in the range (-h, +h)
 				double temp = (average + (random.nextDouble() * 2 * h) - h);
 
 				map[x + halfSide][y + halfSide] = temp > 1 ? 1 : temp;
@@ -111,18 +119,6 @@ public class DiamondSquare {
 		}
 	}
 
-	/**
-	 * Avarage the values
-	 * @param topLeft
-	 * @param topRight
-	 * @param lowerLeft
-	 * @param lowerRight
-	 * @return average 
-	 */
-	private double average(double topLeft, double topRight, double lowerLeft,
-			double lowerRight) {
-		return ((topLeft + topRight + lowerLeft + lowerRight) / 4.0);
-	}
 
 	/**
 	 * The diamond step: Taking a square of four points, generate a random value
@@ -130,6 +126,12 @@ public class DiamondSquare {
 	 * is calculated by averaging the four corner values, plus a random amount.
 	 * This gives you diamonds when you have multiple squares arranged in a
 	 * grid.
+	 * 
+	 * 					aboveOfCenter
+	 * 
+	 * leftOfCenter			X,Y			rightOfCenter
+	 * 
+	 * 					belowOfCenter
 	 * 
 	 * @param sideLength
 	 *            Distance of diagonal in diamond.
@@ -168,6 +170,20 @@ public class DiamondSquare {
 			}
 		}
 	}
+	
+	/**
+	 * Avarage the values
+	 * @param topLeft
+	 * @param topRight
+	 * @param lowerLeft
+	 * @param lowerRight
+	 * @return average 
+	 */
+	private double average(double topLeft, double topRight, double lowerLeft,
+			double lowerRight) {
+		return ((topLeft + topRight + lowerLeft + lowerRight) / 4.0);
+	}
+	
 	/**
 	 * Normalize the map.
 	 */
