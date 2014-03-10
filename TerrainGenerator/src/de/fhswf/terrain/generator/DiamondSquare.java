@@ -85,13 +85,13 @@ public class DiamondSquare {
 	 * value at the center of the diamond. Calculate the midpoint value by
 	 * averaging the corner values, plus a random amount generated in the same
 	 * range as used for the diamond step. This gives you squares again.
+	 * <pre>
+	 * topLeft		topRight
 	 * 
-	 * topLeft					topRight
+	 * 			X,Y
 	 * 
-	 * 			  		X,Y
-	 * 
-	 * lowerLeft				lowerRight
-	 * 
+	 * lowerLeft	lowerRight
+	 * </pre>
 	 * @param sideLength
 	 *            Distance of a single square.
 	 * @param halfSide
@@ -126,13 +126,13 @@ public class DiamondSquare {
 	 * is calculated by averaging the four corner values, plus a random amount.
 	 * This gives you diamonds when you have multiple squares arranged in a
 	 * grid.
+	 * <pre>
+	 * 			aboveOfCenter
 	 * 
-	 * 					aboveOfCenter
+	 * leftOfCenter		X,Y		rightOfCenter
 	 * 
-	 * leftOfCenter			X,Y			rightOfCenter
-	 * 
-	 * 					belowOfCenter
-	 * 
+	 * 			belowOfCenter
+	 * </pre>
 	 * @param sideLength
 	 *            Distance of diagonal in diamond.
 	 * @param halfSide
