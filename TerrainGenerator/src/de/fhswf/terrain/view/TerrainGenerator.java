@@ -1,4 +1,4 @@
-package de.fhswf.terrain.generator.view;
+package de.fhswf.terrain.view;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

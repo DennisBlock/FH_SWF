@@ -38,9 +38,9 @@
                               </items>
                             </ComboBox>
                             <CheckBox fx:id="seedCheckBox" mnemonicParsing="false" onAction="#handleRandomSeed" text="" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                            <Label text="Flachland:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                            <Label text="Flat Country:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
                             <CheckBox fx:id="lowlandCheckBox" mnemonicParsing="false" text="" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                            <Label text="Zufallsseed:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                            <Label text="Random seed:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
                           </children>
                           <columnConstraints>
                             <ColumnConstraints hgrow="SOMETIMES" maxWidth="208.0" minWidth="10.0" prefWidth="208.0" />

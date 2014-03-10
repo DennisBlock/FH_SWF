@@ -1,4 +1,4 @@
-package de.fhswf.terrain.generator.view;
+package de.fhswf.terrain.view;
 
 import java.io.File;
 import java.io.IOException;

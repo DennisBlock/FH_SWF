@@ -1,18 +1,13 @@
 package de.fhswf.terrain.generator;
 
-import java.io.File;
-import java.io.IOException;
 import java.nio.IntBuffer;
 
-import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.image.WritablePixelFormat;
 import javafx.scene.paint.Color;
-
-import javax.imageio.ImageIO;
 /**
  * The Terrain class creates a terrain with biomes from a blurred heightmap
  * image. The heightmap are generated with the diamond-square algorithm.
@@ -103,12 +98,6 @@ public class Terrain {
 
 		}
 
-		File file = new File("heightmap.png");
-		try {
-			ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", file);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 		return image;
 	}
 
@@ -130,7 +119,7 @@ public class Terrain {
 				.getIntArgbInstance();
 
 		// Set the quantity of blur here
-		int kernelSize = 3;
+		int kernelSize = 1;
 
 		for (int x = 0; x < src.getWidth(); x++) {
 			for (int y = 0; y < src.getHeight(); y++) {
